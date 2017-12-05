@@ -114,7 +114,7 @@ WHERE MOV_ID IN (SELECT MOV_ID
 		   WHERE DIR_ID IN 
 		   (SELECT DIR_ID
 	                      FROM DIRECTOR
-                                      WHERE DIR_NAME = 'STEVEN SPIELBERG‘));
+                                      WHERE DIR_NAME = 'STEVEN SPIELBERGâ€˜));
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
