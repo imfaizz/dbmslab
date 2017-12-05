@@ -1,0 +1,134 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+					CREATION OF TABLES
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CREATE TABLE EMPLOYEE
+(SSN NUMBER(9),
+NAME VARCHAR(20),
+ADDRESS VARCHAR(25),
+SEX CHAR (1),
+SUPERSSN NUMBER(9),
+SALARY NUMBER(10,2),
+DNO NUMBER (2),
+CONSTRAINT PK_SSN PRIMARY KEY(SSN),
+CONSTRAINT FK_SP FOREIGN KEY(SUPERSSN) REFERENCES EMPLOYEE (SSN) ON DELETE CASCADE);
+
+
+CREATE TABLE DEPARTMENT
+(DNO NUMBER(2),
+DNAME VARCHAR(25),
+MGRSSN NUMBER(9)
+MGRSTARTDATE DATE,
+CONSTRAINT PK_DNO PRIMARY KEY(DNO),
+CONSTRAINT FK_MGRSSN FOREIGN KEY (MGRSSN) REFERENCES EMPLOYEE(SSN) ON DELETEE CASCADE);
+
+ALTER TABLE EMPLOYEE
+ADD CONSTRAINT FK_D FOREIGN KEY(DNO) REFERENCES DEPT(DNO) ON DELETE CASCADE);
+
+
+CREATE TABLE DLOCATION
+(DLOC VARCHAR(20),
+DNO NUMBER(2),
+CONSTRAINT PK_DLDN PRIMARY KEY (DNO, DLOC),
+CONSTRAINT FK_DNNO FOREIGN KEY(DNO) REFERENCES DEPT(DNO) ON DELETE CASCADE);
+
+
+
+
+CREATE TABLE PROJECT
+(PNO NUMBER(2),
+PNAME VARCHAR(20),
+PLOCATION VARCHAR(25),
+CONSTRAINT PK_PNO PRMARY KEY(PNO),
+CONSTRAINT FK_DNO FOREIGN KEY(DNO) REFERENCES DEPARTMENT (DNO) ON DELETE CASCADE);
+
+
+CREATE TABLE WORKS_ON
+(SSN NUMBER(9),
+PNO NUMBER(2),
+HOURS NUMBER (2),
+CONSTRAINT PK_S_P PRIMARY KEY (SSN, PNO),
+CONSTRAINT FK_SSN FOREIGN KEY(SSN) REFERENCES EMPLOYEE (SSN) ON DELETE CASCADE,
+CONSTRAINT FK_PNO FOREIGN KEY(PNO) REFERENCES PROJECT(PNO) ON DELETE CASCADE);
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+					INSERTION
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+INSERT INTO EMPLOYEE
+(SSN,NAME,ADDRESS,SEX,SALARY)
+VALUES
+(&SSN,'&NAME','&ADDRESS','&SEX',&SALARY);
+
+INSERT INTO DEPT VALUES
+(&DNO,'&DNAME','&MGRSSN','&MGRSTARTDATE');
+
+INSERT INTODLOCATION VALUES
+(&DNO,'&DLOC');
+
+INSERT INTO PROJECT VALUES
+(&PNO,'&PNAME','&PLOCATION',&DNO);
+
+INSERT INTO WORKS_ON VALUES
+(&SSN,&PNO,&HOURS);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+					SQL QUERIES
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1)Make a list of all project numbers for projects that involve an employee whose last name is ‘Scott’, either as a worker or as a manager of the department that controls the project.
+
+(SELECT DISTINCT P.PNO
+FROM PROJECT P, WORKS_ON W, EMPLOYEE E
+WHERE P.PNO=W.PNO
+AND W.SSN=E.SSN
+AND E.NAME=‘SCOTT‘)
+UNION
+(SELECT DISTINCT P.PNO 
+FROM PROJECT P,DEPT D,EMPLOYEE E
+WHERE P.PNO=D.PNO
+AND D.MGRSSN=E.SSN
+AND E.NAME=‘SCOTT‘);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2)Show the resulting salaries if every employee working on the ‘IoT’ project is given a 10 percent raise.
+
+SELECT E.NAME,1.1 * E.SALARY AS HIKED_SALARY 
+FROM EMPLOYEE E,PROJECT P,WORKS_ON W
+WHERE P.PNO=W.PNO AND
+E.SSN=W.SSN AND
+P.PNAME='IOT';
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+3)Find the sum of the salaries of all employees of the ‘Accounts’ department, as well as the maximum salary, the minimum salary, and the average salary in this department
+
+SELECT SUM(E.SALARY) AS SUM_SAL,
+MAX(E.SALARY) AS MAX_SAL,
+MIN(E.SALARY) AS MIN_SAL,
+AVG(E.SALARY) AS AVG_SAL
+FROM EMPLOYEE E,DEPT D
+WHERE E.DNO=D.DNO AND
+E.DNAME='ACCOUNTS';
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4)Retrieve the name of each employee who works on all the projects Controlled by department number 5 (use NOT EXISTS operator).
+
+SELECT E.NAME FROM EMPLOYEE E
+WHERE NOT EXISTS(SELECT *FROM WORKS_ON W
+WHERE(W.PNO IN(SELECT P.PNO FROM PROJECT P WHERE P.DNO=5);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+5)For each department that has more than five employees, retrieve the department 
+number and the number of its employees who are making more than Rs. 6, 00,000.
+
+
+SELECT DNO,COUNT(*) AS NO_OF_EMPS
+FROM EMPLOYEE
+WHERE SALARY>600000 AND
+DNO IN(SELECT DNO FROM EMPLOYEE
+GROUP BY DNO
+HAVING COUNT(*) >5)
+GROUP BY DNO;
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
