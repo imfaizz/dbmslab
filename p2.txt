@@ -45,7 +45,7 @@ INSERT INTO ORDERS VALUES
 					SQL QUERIES
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-1)  Count the customers with grades above Bangalore’s average.
+1)  Count the customers with grades above Bangaloreâ€™s average.
 
 SELECT COUNT(CUSTOMER_ID) 
 FROM CUSTOMER
