@@ -74,22 +74,22 @@ INSERT INTO WORKS_ON VALUES
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 					SQL QUERIES
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-1)Make a list of all project numbers for projects that involve an employee whose last name is ‘Scott’, either as a worker or as a manager of the department that controls the project.
+1)Make a list of all project numbers for projects that involve an employee whose last name is â€˜Scottâ€™, either as a worker or as a manager of the department that controls the project.
 
 (SELECT DISTINCT P.PNO
 FROM PROJECT P, WORKS_ON W, EMPLOYEE E
 WHERE P.PNO=W.PNO
 AND W.SSN=E.SSN
-AND E.NAME=‘SCOTT‘)
+AND E.NAME=â€˜SCOTTâ€˜)
 UNION
 (SELECT DISTINCT P.PNO 
 FROM PROJECT P,DEPT D,EMPLOYEE E
 WHERE P.PNO=D.PNO
 AND D.MGRSSN=E.SSN
-AND E.NAME=‘SCOTT‘);
+AND E.NAME=â€˜SCOTTâ€˜);
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-2)Show the resulting salaries if every employee working on the ‘IoT’ project is given a 10 percent raise.
+2)Show the resulting salaries if every employee working on the â€˜IoTâ€™ project is given a 10 percent raise.
 
 SELECT E.NAME,1.1 * E.SALARY AS HIKED_SALARY 
 FROM EMPLOYEE E,PROJECT P,WORKS_ON W
@@ -97,7 +97,7 @@ WHERE P.PNO=W.PNO AND
 E.SSN=W.SSN AND
 P.PNAME='IOT';
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-3)Find the sum of the salaries of all employees of the ‘Accounts’ department, as well as the maximum salary, the minimum salary, and the average salary in this department
+3)Find the sum of the salaries of all employees of the â€˜Accountsâ€™ department, as well as the maximum salary, the minimum salary, and the average salary in this department
 
 SELECT SUM(E.SALARY) AS SUM_SAL,
 MAX(E.SALARY) AS MAX_SAL,
